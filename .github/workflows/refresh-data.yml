@@ -1,0 +1,42 @@
+name: Refresh live data
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/refresh-data.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch Papertrade + Stonk snapshots
+        run: |
+          mkdir -p data
+          curl -fsSL "https://stonkvolatility.com/api/paper" -o data/paper.json
+          curl -fsSL "https://exchange.papertrade.xyz/query/protocol/history?interval=1m" -o data/history.json
+          python3 - <<'PY'
+          import json, time
+          from pathlib import Path
+          p = json.loads(Path("data/paper.json").read_text())
+          p["_refreshedAt"] = int(time.time() * 1000)
+          Path("data/paper.json").write_text(json.dumps(p))
+          print("mintRate", p["protocol"]["mintRate"], "supply", p["protocol"]["paperSupply"])
+          PY
+      - name: Commit if changed
+        run: |
+          git config user.name "paperhouse-bot"
+          git config user.email "paperhouse-bot@users.noreply.github.com"
+          git add data/paper.json data/history.json
+          if git diff --staged --quiet; then
+            echo "No data change"
+          else
+            git commit -m "chore: refresh PAPER dashboard data $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push
+          fi
