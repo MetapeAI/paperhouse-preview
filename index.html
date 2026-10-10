@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F3EDE4" />
+    <meta
+      name="description"
+      content="paperhouse.si — Don't play the game. Own the house. $HOUSE on HyperEVM. Independent. Not affiliated with Papertrade."
+    />
+    <title>paperhouse.si — $HOUSE</title>
+
+    <style id="critical">
+      :root{--bg:#f3ede4;--ink:#2a2520;--ink-soft:#5a5248;--red:#8b2020;--line:rgba(42,37,32,.12);--sans:Inter,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+      body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--bg)}
+      a{color:inherit;text-decoration:none}
+      .page{width:min(1080px,calc(100% - 2rem));margin:0 auto;padding-bottom:4rem}
+      .nav{display:flex;justify-content:space-between;gap:1rem;padding:1.25rem 0 1rem;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(243,237,228,.92)}
+      .nav-links{display:flex;flex-wrap:wrap;gap:.85rem 1.1rem;font-size:.92rem;color:var(--ink-soft)}
+      .hero{padding:3.2rem 0 1rem}
+      .pnl-card{margin-top:2.4rem;background:#f7f2ea;border:1px solid var(--line);border-radius:16px;padding:1.15rem}
+      .pnl-title{margin:0;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase}
+      .pnl-value{font-family:var(--mono);font-size:clamp(1.8rem,4vw,2.6rem)}
+      .pnl-value.neg{color:var(--red)}
+      .paper-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin-top:1rem}
+    </style>
+
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="./assets/index-B1knZ54L.js"></script>
+    <link rel="stylesheet" href="./assets/index-Cp7ClF7R.css">
+  </head>
+  <body>
+    <div class="page">
+      <header class="nav">
+        <a class="nav-brand" href="#top">paperhouse.si</a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#top">$HOUSE</a>
+          <a href="#buy">Buy</a>
+          <a href="#treasury">Treasury</a>
+          <a href="#chart">Chart</a>
+          <a href="#paper">PAPER</a>
+          <a href="https://x.com/" target="_blank" rel="noopener noreferrer">X</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero">
+          <p class="eyebrow">HyperEVM · Independent meme</p>
+          <h1>Don't play the game.<br /><span class="accent">Own the house.</span></h1>
+          <p class="tagline">Players bleed. The house feeds.</p>
+          <p class="lede">
+            $HOUSE is a light-treasury meme on HyperEVM that stands with the house —
+            not with 1000× gamblers. Live Papertrade Total Trader PnL sits at the
+            center. Independent. Not affiliated with Papertrade.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#buy">Buy $HOUSE</a>
+            <a class="btn btn-ghost" href="#treasury">View Treasury</a>
+          </div>
+
+          <article class="pnl-card" id="chart" aria-label="Live Total Trader PnL">
+            <div class="pnl-head">
+              <div>
+                <h2 class="pnl-title">TOTAL TRADER PNL</h2>
+                <p class="pnl-sub">
+                  Live from Papertrade protocol history · 1d · cumulative realized, net of fees
+                </p>
+              </div>
+              <div class="pnl-controls">
+                <span class="pill">1d</span>
+                <span class="pill live" id="live-pill" aria-live="polite">LIVE</span>
+              </div>
+            </div>
+            <div class="pnl-value-row">
+              <div class="pnl-value neg" id="pnl-value">—</div>
+              <div class="pnl-meta">
+                <span id="pnl-updated">Waiting for feed…</span>
+                <a
+                  class="pnl-source"
+                  href="https://exchange.papertrade.xyz/stats"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Open Papertrade stats ↗</a
+                >
+              </div>
+            </div>
+            <div class="pnl-chart-wrap">
+              <canvas id="pnl-canvas" width="960" height="320" aria-label="Total Trader PnL chart"></canvas>
+              <div class="pnl-empty" id="pnl-empty" hidden>Loading live series…</div>
+            </div>
+            <p class="pnl-note">
+              Source endpoint:
+              <code>/query/protocol/history?interval=1m</code>
+              → <code>columns.traderPnl</code>. Polled every 20s via local proxy.
+            </p>
+          </article>
+
+          <article class="pnl-card paper-card" id="paper" aria-label="Live PAPER mint cost">
+            <div class="pnl-head">
+              <div>
+                <h2 class="pnl-title">PAPER MINT COST (LIVE)</h2>
+                <p class="pnl-sub">
+                  Implied USD per PAPER from loss emissions · not a transferable market price
+                </p>
+              </div>
+              <div class="pnl-controls">
+                <span class="pill">MINT</span>
+                <span class="pill live" id="paper-live-pill" aria-live="polite">LIVE</span>
+              </div>
+            </div>
+            <div class="pnl-value-row">
+              <div>
+                <div class="pnl-value" id="paper-mint-cost">—</div>
+                <p class="paper-unit">USD / PAPER · marginal = 1 ÷ mintRate</p>
+              </div>
+              <div class="pnl-meta">
+                <span id="paper-updated">Waiting for feed…</span>
+                <a
+                  class="pnl-source"
+                  href="https://stonkvolatility.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Open Stonk PAPER feed ↗</a
+                >
+              </div>
+            </div>
+            <div class="paper-metrics" id="paper-metrics">
+              <div class="paper-metric">
+                <span class="paper-metric-label">MINT RATE</span>
+                <span class="paper-metric-value" id="paper-mint-rate">—</span>
+              </div>
+              <div class="paper-metric">
+                <span class="paper-metric-label">PAPER SUPPLY</span>
+                <span class="paper-metric-value" id="paper-supply">—</span>
+              </div>
+              <div class="paper-metric">
+                <span class="paper-metric-label">STAKED</span>
+                <span class="paper-metric-value" id="paper-staked-pct">—</span>
+              </div>
+              <div class="paper-metric">
+                <span class="paper-metric-label">TRACKED LP / CAP</span>
+                <span class="paper-metric-value" id="paper-lp">—</span>
+              </div>
+              <div class="paper-metric">
+                <span class="paper-metric-label">FEES LIFETIME</span>
+                <span class="paper-metric-value" id="paper-fees">—</span>
+              </div>
+              <div class="paper-metric">
+                <span class="paper-metric-label">HARD BAND</span>
+                <span class="paper-metric-value" id="paper-band">floor $0.01 · marginal —</span>
+              </div>
+            </div>
+            <p class="pnl-note" id="paper-disclaimer">
+              Mint-cost from loss emissions, not a transferable market price; PAPER may be
+              non-transferable. Source: <code>/stonk-api/paper</code> · polled every 20s.
+            </p>
+          </article>
+        </section>
+
+        <section class="section" id="positioning">
+          <h2 class="section-label">POSITIONING</h2>
+          <div class="cards">
+            <article class="card">
+              <h3>Own the house</h3>
+              <p>
+                Traders chase 1000×. $HOUSE stands on the other side of the table —
+                where the house feeds when players bleed.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Not a share of PAPER</h3>
+              <p>
+                $HOUSE is not PAPER, not a claim on staking rewards, and not a
+                receipt for queued profits. It is a meme with a public treasury.
+              </p>
+            </article>
+            <article class="card">
+              <h3>Independent</h3>
+              <p>
+                Built by observers of Papertrade. Not affiliated with Papertrade,
+                Hyperliquid, or any paper-strategy fork.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="tokenomics">
+          <h2 class="section-label">TOKENOMICS</h2>
+          <div class="table-wrap">
+            <table class="tok-table">
+              <tbody>
+                <tr>
+                  <th>Chain</th>
+                  <td>HyperEVM (999)</td>
+                </tr>
+                <tr>
+                  <th>Token</th>
+                  <td>$HOUSE · fixed 1,000,000,000 supply · no mint</td>
+                </tr>
+                <tr>
+                  <th>Launch</th>
+                  <td>Fair launch · full supply into HOUSE/HYPE · no presale · no team allocation · no airdrop</td>
+                </tr>
+                <tr>
+                  <th>Tax</th>
+                  <td>5% buy / 5% sell · 1% team multisig · 4% treasury</td>
+                </tr>
+                <tr>
+                  <th>Anti-snipe</th>
+                  <td>Tax starts at 40% and linear-decays to 5% over 45 minutes</td>
+                </tr>
+                <tr>
+                  <th>Treasury split</th>
+                  <td>90% buyback &amp; burn · 10% ops (domain, gas, design)</td>
+                </tr>
+                <tr>
+                  <th>LP</th>
+                  <td>30-day timelock</td>
+                </tr>
+                <tr>
+                  <th>Permissions</th>
+                  <td>Multisig may lower tax, never raise it · no arbitrary wallet drain</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="how">
+          <h2 class="section-label">HOW IT WORKS</h2>
+          <ol class="steps">
+            <li>
+              <span class="step-num">01</span>
+              <div>
+                <h3>Tax</h3>
+                <p>Every buy and sell of $HOUSE pays 5% into the loop.</p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">02</span>
+              <div>
+                <h3>Treasury</h3>
+                <p>
+                  Multisig treasury holds proceeds, publishes balances, and keeps
+                  the house dashboard honest.
+                </p>
+              </div>
+            </li>
+            <li>
+              <span class="step-num">03</span>
+              <div>
+                <h3>Buyback burn</h3>
+                <p>90% of treasury HYPE buys $HOUSE on market and burns it.</p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="section" id="buy">
+          <h2 class="section-label">BUY</h2>
+          <div class="buy-box">
+            <p>Launch pending. Pair will be <strong>HOUSE / HYPE</strong> on HyperSwap.</p>
+            <p class="muted">Slippage tip after launch: set above tax (≈6%+).</p>
+            <a class="btn btn-primary" href="#addresses">Addresses TBA</a>
+          </div>
+        </section>
+
+        <section class="section" id="treasury">
+          <h2 class="section-label">TREASURY</h2>
+          <div class="buy-box">
+            <p>
+              Public multisig. Tax in. Buybacks out. Every material move is an
+              on-chain transaction.
+            </p>
+            <p class="muted">Demo house wallet optional — for show, not “smart money.”</p>
+          </div>
+        </section>
+
+        <section class="section" id="addresses">
+          <h2 class="section-label">ADDRESSES</h2>
+          <div class="table-wrap">
+            <table class="tok-table mono">
+              <tbody>
+                <tr><th>Token</th><td>TBA</td></tr>
+                <tr><th>Pair</th><td>TBA</td></tr>
+                <tr><th>Treasury</th><td>TBA</td></tr>
+                <tr><th>Buyback</th><td>TBA</td></tr>
+                <tr><th>LP Timelock</th><td>TBA</td></tr>
+                <tr><th>Team Multisig</th><td>TBA (2/3)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section disclaimer" id="disclaimer">
+          <h2 class="section-label">DISCLAIMER</h2>
+          <div class="disclaimer-box">
+            <p>
+              <strong>Independent.</strong> Not affiliated with Papertrade,
+              Hyperliquid, PaperStrategy, or any related team.
+            </p>
+            <p>
+              No guarantees. Experimental meme token. You can lose everything.
+              Not financial advice. Not a share of PAPER, LP, or protocol cashflow.
+              Live charts are scraped from public Papertrade stats for illustration
+              only.
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>
+          <strong>paperhouse.si</strong> · $HOUSE
+          <span class="dot">·</span>
+          Don't play the game. Own the house.
+        </div>
+        <div class="footer-links">
+          <a href="https://exchange.papertrade.xyz/stats" target="_blank" rel="noopener noreferrer">Papertrade stats</a>
+          <a href="https://docs.papertrade.xyz/" target="_blank" rel="noopener noreferrer">Papertrade docs</a>
+          <a href="#disclaimer">Disclaimer</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
